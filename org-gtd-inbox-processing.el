@@ -54,19 +54,43 @@ Note that this function is intended to be used only during inbox processing.
 Each action continues inbox processing, so you may put your emacs in an
 undefined state."
   ["Actionable"
-   [("q" "Quick action" org-gtd--quick-action)
-    ("s" "Single action" org-gtd--single-action)]
-   [("d" "Delegate" org-gtd--delegate)
-    ("c" "Calendar" org-gtd--calendar)]
-   [("p" "Project (multi-step)" org-gtd--project)]
+   [
+    ;; "Less than 2 Min? Do it:"
+    ("f" "Finished action" org-gtd--finished-action)
+    ;; ("s" "Single action" org-gtd--single-action)
+    ]
+   [
+    ;; "More than 2 min:"
+    ;; ["Delegate it"
+     ("w" "Waiting for" org-gtd--waiting)
+     ;; ("g" "Delegate" org-gtd--delegate)
+     ;; ]
+    ;; ["Defer it:"
+    ("n" "Next action" org-gtd--single-action)
+    ("c" "Calendar" org-gtd--calendar)
+    ;; ]
+  ]
+   [
+    ;; "Multi-step"
+("p" "Project (multi-step)" org-gtd--project)
+ ]
    ]
-  ["Non-actionable"
-   [("i" "Incubate" org-gtd--incubate)
-    ("a" "Archive this knowledge" org-gtd--archive)]
-   [("t" "Trash" org-gtd--trash)]]
-  ["Org GTD"
-   ("x"
-    "Exit. Stop processing the inbox for now."
+  ["Non-actionable:"
+   [
+   ;; "Incubate:"
+    ;; ("i" "Incubate" org-gtd--incubate)
+    ("k" "Tickler" org-gtd--tickler)
+    ("s" "Someday Maybe" org-gtd--someday)
+    ("r" "Reference material" org-gtd--reference)
+    ;; ("a" "Archive this knowledge" org-gtd--archive)
+    ]
+    [
+     ("d" "Delete" org-gtd--trash)
+     ]
+    ]
+  ["Org GTD:"
+   ("q"
+    "Quit. Stop processing the inbox for now."
     org-gtd--stop-processing)])
 
 ;;;###autoload
@@ -90,6 +114,14 @@ undefined state."
 
 ;;;###autoload
 (defun org-gtd--archive ()
+  "Process GTD inbox item as an archive item."
+  (interactive)
+  (org-todo "DONE")
+  (with-org-gtd-context (org-archive-subtree))
+  (org-gtd-process-inbox))
+
+;;;###autoload
+(defun org-gtd--reference ()
   "Process GTD inbox item as a reference item."
   (interactive)
   (org-todo "DONE")
@@ -165,7 +197,44 @@ the inbox.  Set it as a waiting action and refile to
   (org-gtd-process-inbox))
 
 ;;;###autoload
+(defun org-gtd--waiting ()
+  "Process GTD inbox item by delegating it.
+Allow the user apply user-defined tags from
+`org-tag-persistent-alist', `org-tag-alist' or file-local tags in
+the inbox.  Set it as a waiting action and refile to
+`org-gtd-actionable-file-basename'."
+  (interactive)
+  (org-gtd--decorate-item)
+  (org-gtd-delegate)
+  (org-gtd--refile org-gtd-actions)
+  (org-gtd-process-inbox))
+
+;;;###autoload
 (defun org-gtd--incubate ()
+  "Process GTD inbox item by incubating it.
+Allow the user apply user-defined tags from
+`org-tag-persistent-alist', `org-tag-alist' or file-local tags in
+the inbox.  Refile to any org-gtd incubate target (see manual)."
+  (interactive)
+  (org-gtd--decorate-item)
+  (org-schedule 0)
+  (org-gtd--refile org-gtd-incubated)
+  (org-gtd-process-inbox))
+
+;;;###autoload
+(defun org-gtd--someday ()
+  "Process GTD inbox item by incubating it.
+Allow the user apply user-defined tags from
+`org-tag-persistent-alist', `org-tag-alist' or file-local tags in
+the inbox.  Refile to any org-gtd incubate target (see manual)."
+  (interactive)
+  (org-gtd--decorate-item)
+  (org-schedule 0)
+  (org-gtd--refile org-gtd-incubated)
+  (org-gtd-process-inbox))
+
+;;;###autoload
+(defun org-gtd--tickler ()
   "Process GTD inbox item by incubating it.
 Allow the user apply user-defined tags from
 `org-tag-persistent-alist', `org-tag-alist' or file-local tags in
@@ -191,6 +260,19 @@ the inbox.  Mark it as done and archive."
 
 ;;;###autoload
 (defun org-gtd--single-action ()
+  "Process GTD inbox item as a single action.
+Allow the user apply user-defined tags from
+`org-tag-persistent-alist', `org-tag-alist' or file-local tags in
+the inbox.  Set as a NEXT action and refile to
+`org-gtd-actionable-file-basename'."
+  (interactive)
+  (org-gtd--decorate-item)
+  (org-todo "NEXT")
+  (org-gtd--refile org-gtd-actions)
+  (org-gtd-process-inbox))
+
+;;;###autoload
+(defun org-gtd--finished-action ()
   "Process GTD inbox item as a single action.
 Allow the user apply user-defined tags from
 `org-tag-persistent-alist', `org-tag-alist' or file-local tags in

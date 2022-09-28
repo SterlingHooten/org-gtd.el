@@ -10,9 +10,17 @@ This is my version of the org-gtd package to fit with my workflow and preference
 :PROPERTIES:
 :ID:       FAF71367-91AF-4FD3-B4ED-A3EAA4BBACB2
 :CREATED:  [2022-09-28 Wed 11:52]
-:MODIFIED: [2022-09-28 Wed 11:53]
-:HASH:     -458322681489608055
+:MODIFIED: [2022-09-28 Wed 13:22]
+:HASH:     -1392310142545085106
 :END:
+- Alter commands to fit with my GTD keywords and emacs style shortcuts in dired etc:
+  - 'q' instead of 'x' for quitting
+    - Elimination of "quick action" (I don't need a )
+  - 'd' instead of 't' for deleting things
+  - 'w' instead of 'd' for delegation/waiting
+    - If you want to discriminate between "Delegated" items and "Waiting for" items, you could instatiate with 'g' for "DeleGation"
+  - 'r' instead of 'a' for archiving/adding to reference cabinet
+    - I understand archiving as distinct from reference material in that it's not meant for active use 
 * NOTICE
 This is org-gtd 2.0.0. 
 
