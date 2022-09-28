@@ -1,10 +1,24 @@
+* Introduction
+:PROPERTIES:
+:ID:       722630E2-6A53-49B2-94E7-A158C5B3FB1B
+:CREATED:  [2022-09-28 Wed 11:51]
+:MODIFIED: [2022-09-28 Wed 11:53]
+:HASH:     336467201592505671
+:END:
+This is my version of the org-gtd package to fit with my workflow and preferences.
+** Changes from upstream
+:PROPERTIES:
+:ID:       FAF71367-91AF-4FD3-B4ED-A3EAA4BBACB2
+:CREATED:  [2022-09-28 Wed 11:52]
+:MODIFIED: [2022-09-28 Wed 11:53]
+:HASH:     -458322681489608055
+:END:
 * NOTICE
 This is org-gtd 2.0.0. 
 
 Check documentation in [[doc/]] if you're upgrading. Please report all defects as Github issues.
 
 Use existing tags if you'd rather stick to a pre-2.0 version.
-
 * Org GTD
 This package tries to replicate as closely as possible the GTD workflow.
 This package assumes familiarity with GTD.
